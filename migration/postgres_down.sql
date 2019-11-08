@@ -1,3 +1,3 @@
-DROP TABLE note;
+DROP TABLE IF EXISTS note CASCADE;
 
-DROP TABLE user_account;
+DROP TABLE IF EXISTS user_account CASCADE;

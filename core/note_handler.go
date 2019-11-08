@@ -24,7 +24,7 @@ func (c *Capsule) CreateNote(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	note.UserID = 1
-	note.Status = 1
+	note.Status = consts.Active
 	err = c.insertNoteIntoDatabase(note)
 	if err != nil {
 		log.Println("App : Error! ", err.Error())

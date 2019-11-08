@@ -1,4 +1,4 @@
-CREATE TABLE user_account (
+CREATE TABLE IF NOT EXISTS user_account (
 id INTEGER,
 username VARCHAR(50) NOT NULL,
 email VARCHAR(50) NOT NULL UNIQUE,
@@ -7,7 +7,7 @@ status INTEGER DEFAULT 1,
 PRIMARY KEY (id)
 );
 
-CREATE TABLE note (
+CREATE TABLE IF NOT EXISTS note (
     id SERIAL,
     user_id INTEGER NOT NULL,
     title VARCHAR(50) NOT NULL,
