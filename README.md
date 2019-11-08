@@ -1,2 +1,11 @@
-# qk-notes
-It is a online place to store your notes quickly written in golang
+# QUICK-NOTE
+
+## Run
+
+* Export environment variables
+
+    `$ source config/development.env`
+
+* Start application
+
+    `$ go run main.go`
