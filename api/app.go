@@ -4,7 +4,7 @@ import (
 	"qk-note/core"
 )
 
-// App : to represent this application
+// App : Struct to represent this app
 type App struct {
 	core.QK
 }

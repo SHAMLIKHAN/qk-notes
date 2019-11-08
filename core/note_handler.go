@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"qk-note/consts"
 	"qk-note/models"
 	"qk-note/shared"
 )
@@ -15,7 +16,7 @@ func (c *Capsule) CreateNote(w http.ResponseWriter, r *http.Request) {
 	err := body.Decode(&note)
 	if err != nil {
 		log.Println("App : Error! ", err.Error())
-		shared.Fail(w, 400, 1, "Decode Error")
+		shared.Fail(w, 400, consts.DecodeErrorCode, consts.DecodeError)
 		return
 	}
 	note.UserID = 1
@@ -23,7 +24,7 @@ func (c *Capsule) CreateNote(w http.ResponseWriter, r *http.Request) {
 	err = c.insertNoteIntoDatabase(note)
 	if err != nil {
 		log.Println("App : Error! ", err.Error())
-		shared.Fail(w, 500, 1, "Database Error")
+		shared.Fail(w, 500, consts.DatabaseErrorCode, consts.DatabaseError)
 		return
 	}
 	shared.Send(w, 200, note)

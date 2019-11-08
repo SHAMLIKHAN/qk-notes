@@ -5,14 +5,10 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"qk-note/consts"
 )
 
-const (
-	// SERVER : Server listening port
-	SERVER = "QKNOTE_SERVER"
-)
-
-// Router : An alternate router
+// Router : Router in case of database failure
 func Router(addr string, err error) {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Oops! Database connection failed! \n %s", err)
@@ -21,9 +17,9 @@ func Router(addr string, err error) {
 }
 
 func getServerAddr() string {
-	port, ok := os.LookupEnv(SERVER)
+	port, ok := os.LookupEnv(consts.SERVER)
 	if !ok {
-		log.Println("App : SERVER_PORT environment variable required but not set")
+		log.Println("App : SERVER environment variable required but not set")
 		os.Exit(1)
 	}
 	addr := ":" + port

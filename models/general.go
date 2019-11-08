@@ -1,6 +1,6 @@
 package models
 
-// Note : defines the structure of note
+// Note : Defines the structure of note
 type Note struct {
 	UserID int    `json:"user_id,omitempty"`
 	Title  string `json:"title"`

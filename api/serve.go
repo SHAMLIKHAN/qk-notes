@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-// Serve : To run api server
+// Serve : Run api server
 func (a *App) Serve(addr string) {
 	router := a.Router()
 	log.Println("App : Server is listening...")
