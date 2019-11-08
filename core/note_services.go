@@ -39,3 +39,12 @@ func (c *Capsule) getNoteFromDatabase(id int) (*models.Note, error) {
 	}
 	return &note, nil
 }
+
+func (c *Capsule) deleteNoteFromDatabase(id int) error {
+	query := `DELETE FROM note WHERE id = $1`
+	_, err := c.DB.Exec(query, id)
+	if err != nil {
+		return err
+	}
+	return nil
+}

@@ -77,5 +77,21 @@ func (c *Capsule) EditNote(w http.ResponseWriter, r *http.Request) {
 
 // DeleteNote : to delete a particular note
 func (c *Capsule) DeleteNote(w http.ResponseWriter, r *http.Request) {
-	shared.Send(w, 200, "Success")
+	id := mux.Vars(r)["id"]
+	noteID, err := strconv.Atoi(id)
+	if err != nil {
+		fmt.Println("App: Error! ", err.Error())
+		shared.Fail(w, 400, consts.InputDataErrorCode, consts.InputDataError)
+		return
+	}
+	err = c.deleteNoteFromDatabase(noteID)
+	if err != nil {
+		log.Println("App : Error! ", err.Error())
+		shared.Fail(w, 500, consts.DatabaseErrorCode, consts.DatabaseError)
+		return
+	}
+	log.Println("App : DELETE /note/{id} API called!")
+	log.Println("App : Note deleted from database! Note ID : ", noteID)
+	response := `Success! Note [` + id + `] Deleted`
+	shared.Send(w, 200, response)
 }
