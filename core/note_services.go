@@ -28,3 +28,14 @@ func (c *Capsule) getNotesFromDatabase(userID int) ([]models.Note, error) {
 	}
 	return notes, nil
 }
+
+func (c *Capsule) getNoteFromDatabase(id int) (*models.Note, error) {
+	query := `SELECT * FROM note WHERE id = $1`
+	result := c.DB.QueryRow(query, id)
+	var note models.Note
+	err := result.Scan(&note.ID, &note.UserID, &note.Title, &note.Text, &note.Status)
+	if err != nil {
+		return nil, err
+	}
+	return &note, nil
+}

@@ -2,11 +2,15 @@ package core
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"qk-note/consts"
 	"qk-note/models"
 	"qk-note/shared"
+	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
 // CreateNote : to add a new note
@@ -48,7 +52,22 @@ func (c *Capsule) GetNotes(w http.ResponseWriter, r *http.Request) {
 
 // GetNote : to get a particular note
 func (c *Capsule) GetNote(w http.ResponseWriter, r *http.Request) {
-	shared.Send(w, 200, "Success")
+	id := mux.Vars(r)["id"]
+	noteID, err := strconv.Atoi(id)
+	if err != nil {
+		fmt.Println("App: Error! ", err.Error())
+		shared.Fail(w, 400, consts.InputDataErrorCode, consts.InputDataError)
+		return
+	}
+	note, err := c.getNoteFromDatabase(noteID)
+	if err != nil {
+		log.Println("App : Error! ", err.Error())
+		shared.Fail(w, 500, consts.DatabaseErrorCode, consts.DatabaseError)
+		return
+	}
+	log.Println("App : GET /note/{id} API called!")
+	log.Println("App : Note retrieved from database! ", note)
+	shared.Send(w, 200, note)
 }
 
 // EditNote : to update a particular note
