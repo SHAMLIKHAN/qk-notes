@@ -40,6 +40,15 @@ func (c *Capsule) getNoteFromDatabase(id int) (*models.Note, error) {
 	return &note, nil
 }
 
+func (c *Capsule) updateNoteIntoDatabase(note *models.Note) error {
+	query := `UPDATE note SET title = $1, text = $2 WHERE id = $3`
+	_, err := c.DB.Exec(query, note.Title, note.Text, note.ID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (c *Capsule) deleteNoteFromDatabase(id int) error {
 	query := `DELETE FROM note WHERE id = $1`
 	_, err := c.DB.Exec(query, id)
