@@ -27,12 +27,23 @@ func (c *Capsule) CreateNote(w http.ResponseWriter, r *http.Request) {
 		shared.Fail(w, 500, consts.DatabaseErrorCode, consts.DatabaseError)
 		return
 	}
+	log.Println("App : POST /note API called!")
+	log.Println("App : Note inserted to database! ", note)
 	shared.Send(w, 200, note)
 }
 
 // GetNotes : to return all notes
 func (c *Capsule) GetNotes(w http.ResponseWriter, r *http.Request) {
-	shared.Send(w, 200, "Success")
+	userID := 1
+	notes, err := c.getNotesFromDatabase(userID)
+	if err != nil {
+		log.Println("App : Error! ", err.Error())
+		shared.Fail(w, 500, consts.DatabaseErrorCode, consts.DatabaseError)
+		return
+	}
+	log.Println("App : GET /note API called!")
+	log.Println("App : Notes are retrieved from database! ", notes)
+	shared.Send(w, 200, notes)
 }
 
 // GetNote : to get a particular note
