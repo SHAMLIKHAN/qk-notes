@@ -11,8 +11,9 @@ func Begin() {
 	db, err := prepareDatabase()
 	if err != nil {
 		log.Println("App : Database connection failed!")
-		addr := getServerAddr()
-		Router(addr, err)
+		panic(err)
+		// addr := getServerAddr()
+		// Router(addr, err)
 	} else {
 		app := api.App{
 			QK: core.GetCapsule(db),
