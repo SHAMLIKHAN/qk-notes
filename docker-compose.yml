@@ -7,8 +7,6 @@ services:
     ports:
       - 5434:5432
     container_name: qk-notes-db
-    volumes:
-      - ./volume/postgres:/var/lib/postgresql/data
     networks:
       - qk
   app:
