@@ -1,2 +1,9 @@
-# qk-notes
-It is a online place to store your notes quickly written in golang
+# QUICK-NOTE
+
+An application to manage notes. Application is dockerized including the database.
+
+## Run
+
+* Start application
+
+    `$ docker-compose up --build`

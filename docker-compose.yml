@@ -1,0 +1,25 @@
+version: '3.0'
+services:
+  db:
+    build:
+      context: ./migration
+      dockerfile: Database.Dockerfile
+    ports:
+      - 5434:5432
+    container_name: qk-notes-db
+    networks:
+      - qk
+  app:
+    build: .
+    ports:
+      - 3000:3000
+    container_name: qk-notes-app
+    env_file:
+      - config/development.env
+    networks:
+      - qk
+    depends_on:
+      - db
+    restart: on-failure:5
+networks:
+  qk:
