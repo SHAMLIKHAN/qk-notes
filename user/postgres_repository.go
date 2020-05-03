@@ -31,3 +31,12 @@ func (pg *PostgresRepo) CheckEmail(user *User) (int, error) {
 	err := pg.DB.QueryRow(query, user.Email).Scan(&count)
 	return count, err
 }
+
+// LoginUser : Postgres function to validate user crederntials
+func (pg *PostgresRepo) LoginUser(login *Login) (*User, error) {
+	var user User
+	query := `SELECT * FROM user_account WHERE (username = $1 OR email = $2) AND password = $3 AND status = $4;`
+	row := pg.DB.QueryRow(query, login.Username, login.Email, login.Password, ALIVE)
+	err := row.Scan(&user.ID, &user.FirstName, &user.LastName, &user.Username, &user.Email, &user.Password, &user.Role, &user.Status)
+	return &user, err
+}

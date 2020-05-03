@@ -38,6 +38,7 @@ func (r *ChiRouter) Setup() *chi.Mux {
 
 	cr.Route("/user", func(cr chi.Router) {
 		cr.Post("/register", uah.RegisterUser)
+		cr.Post("/login", uah.LoginUser)
 	})
 
 	return cr

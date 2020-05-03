@@ -3,6 +3,8 @@ package shared
 const (
 	// EmptyString : NULL
 	EmptyString = ""
+	// JWTKey : JWT Secret Key
+	JWTKey = "abcdefghijklmnopqrstuvwxyz"
 
 	// DBHOST : Database Host
 	DBHOST = "HOST"

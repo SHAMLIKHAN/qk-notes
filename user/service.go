@@ -3,6 +3,10 @@ package user
 import (
 	"database/sql"
 	"errors"
+	"qk-note/shared"
+	"time"
+
+	"github.com/dgrijalva/jwt-go"
 )
 
 // Service : User Service
@@ -11,6 +15,9 @@ type Service interface {
 	RegisterUser(*User) error
 	UniqueUsername(user *User) error
 	UniqueEmail(user *User) error
+	ValidateLogin(user *Login) error
+	LoginUser(user *Login) (*Claims, error)
+	GenerateToken(user *Claims) (*JWT, error)
 }
 
 // AccountService : User Account Service Struct
@@ -64,4 +71,50 @@ func (as *AccountService) UniqueEmail(user *User) error {
 		return errors.New("email already exists")
 	}
 	return nil
+}
+
+// ValidateLogin : to Validate Login Essentials
+func (as *AccountService) ValidateLogin(user *Login) error {
+	if user.Username == "" && user.Email == "" {
+		return errors.New("username or email required")
+	} else if user.Password == "" {
+		return errors.New("password required")
+	}
+	return nil
+}
+
+// LoginUser : to Validate user credentials against DB
+func (as *AccountService) LoginUser(login *Login) (*Claims, error) {
+	user, err := as.ur.LoginUser(login)
+	if err != nil {
+		return nil, errors.New(shared.DatabaseError)
+	} else if user == nil {
+		return nil, errors.New("incorrect username or password")
+	}
+	var userLogged Claims
+	userLogged.ID = user.ID
+	userLogged.Username = user.Username
+	userLogged.Email = user.Email
+	return &userLogged, nil
+}
+
+// GenerateToken : to Generate JWT Access Token
+func (as *AccountService) GenerateToken(user *Claims) (*JWT, error) {
+	var jwtKey = []byte(shared.JWTKey)
+	expirationTime := time.Now().Add(20 * time.Minute)
+	claims := &Claims{
+		ID:       user.ID,
+		Username: user.Username,
+		Email:    user.Email,
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: expirationTime.Unix(),
+		},
+	}
+	token, err := jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString(jwtKey)
+	if err != nil {
+		return nil, errors.New(shared.JWTError)
+	}
+	var jwtToken JWT
+	jwtToken.Token = token
+	return &jwtToken, nil
 }

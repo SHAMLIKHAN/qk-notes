@@ -9,6 +9,8 @@ const (
 	DatabaseErrorCode = 3
 	// InputDataErrorCode : InputDataError
 	InputDataErrorCode = 4
+	// JWTErrorCode : JWTError
+	JWTErrorCode = 5
 
 	// DecodeError : Decode Error
 	DecodeError = "Error while decoding JSON data"
@@ -18,4 +20,6 @@ const (
 	DatabaseError = "Error while querying the DB"
 	// InputDataError : Input Data Error
 	InputDataError = "Error while handling input data"
+	// JWTError : JWT Error
+	JWTError = "Error while generating JWT token"
 )

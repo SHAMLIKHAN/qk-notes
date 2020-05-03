@@ -7,6 +7,7 @@ type Repo interface {
 	Register(*User) error
 	CheckUsername(user *User) (int, error)
 	CheckEmail(user *User) (int, error)
+	LoginUser(user *Login) (*User, error)
 }
 
 // NewRepo : Returns User Repo
