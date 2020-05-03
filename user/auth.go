@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/http"
 	"qk-note/shared"
+	"strconv"
 	"strings"
 	"time"
 
@@ -72,6 +73,7 @@ func (a *JWTAuth) VerifyToken(next http.Handler) http.Handler {
 			shared.Fail(w, 400, shared.InvalidAccessTokenErrorCode, shared.InvalidAccessTokenError)
 			return
 		}
+		r.Header.Add("user_id", strconv.Itoa(claims.ID))
 		next.ServeHTTP(w, r)
 	})
 }
