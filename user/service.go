@@ -6,8 +6,8 @@ import (
 	"qk-note/shared"
 )
 
-// Service : User Service
-type Service interface {
+// ServiceInterface : User Service
+type ServiceInterface interface {
 	ValidateUser(*User) error
 	RegisterUser(*User) error
 	UniqueUsername(user *User) error
@@ -16,20 +16,20 @@ type Service interface {
 	LoginUser(user *Login) (*Claims, error)
 }
 
-// AccountService : User Account Service Struct
-type AccountService struct {
+// Service : User Service Struct
+type Service struct {
 	ur Repo
 }
 
-// NewAccountService : Returns User Account Service
-func NewAccountService(db *sql.DB) Service {
-	return &AccountService{
+// NewService : Returns User Service
+func NewService(db *sql.DB) ServiceInterface {
+	return &Service{
 		ur: NewRepo(db),
 	}
 }
 
 // ValidateUser : to validate User
-func (as *AccountService) ValidateUser(user *User) error {
+func (us *Service) ValidateUser(user *User) error {
 	if user.FirstName == "" {
 		return errors.New("firstname required")
 	} else if user.Username == "" {
@@ -43,13 +43,13 @@ func (as *AccountService) ValidateUser(user *User) error {
 }
 
 // RegisterUser : to register User
-func (as *AccountService) RegisterUser(user *User) error {
-	return as.ur.Register(user)
+func (us *Service) RegisterUser(user *User) error {
+	return us.ur.Register(user)
 }
 
 // UniqueUsername : to check the username already exists or not
-func (as *AccountService) UniqueUsername(user *User) error {
-	count, err := as.ur.CheckUsername(user)
+func (us *Service) UniqueUsername(user *User) error {
+	count, err := us.ur.CheckUsername(user)
 	if err != nil {
 		return nil
 	} else if count != 0 {
@@ -59,8 +59,8 @@ func (as *AccountService) UniqueUsername(user *User) error {
 }
 
 // UniqueEmail : to check the email already exists or not
-func (as *AccountService) UniqueEmail(user *User) error {
-	count, err := as.ur.CheckEmail(user)
+func (us *Service) UniqueEmail(user *User) error {
+	count, err := us.ur.CheckEmail(user)
 	if err != nil {
 		return nil
 	} else if count != 0 {
@@ -70,7 +70,7 @@ func (as *AccountService) UniqueEmail(user *User) error {
 }
 
 // ValidateLogin : to Validate Login Essentials
-func (as *AccountService) ValidateLogin(user *Login) error {
+func (us *Service) ValidateLogin(user *Login) error {
 	if user.Username == "" && user.Email == "" {
 		return errors.New("username or email required")
 	} else if user.Password == "" {
@@ -80,8 +80,8 @@ func (as *AccountService) ValidateLogin(user *Login) error {
 }
 
 // LoginUser : to Validate user credentials against DB
-func (as *AccountService) LoginUser(login *Login) (*Claims, error) {
-	user, err := as.ur.LoginUser(login)
+func (us *Service) LoginUser(login *Login) (*Claims, error) {
+	user, err := us.ur.LoginUser(login)
 	if err != nil {
 		return nil, errors.New(shared.DatabaseError)
 	} else if user == nil {

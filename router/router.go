@@ -14,7 +14,7 @@ type Router interface {
 	Setup() *chi.Mux
 }
 
-// ChiRouter : Struct that holds router and DB connection
+// ChiRouter : Router that holds DB connection
 type ChiRouter struct {
 	DB *sql.DB
 }
@@ -37,7 +37,7 @@ func (r *ChiRouter) Setup() *chi.Mux {
 
 	auth := user.NewAuthMiddleware()
 	uah := user.NewHTTPHandler(r.DB)
-	nh := note.NewHTTPHandler(r.DB)
+	nth := note.NewHTTPHandler(r.DB)
 
 	cr.Route("/user", func(cr chi.Router) {
 		cr.Post("/register", uah.RegisterUser)
@@ -45,7 +45,7 @@ func (r *ChiRouter) Setup() *chi.Mux {
 
 		cr.Group(func(cr chi.Router) {
 			cr.Use(auth.VerifyToken)
-			cr.Post("/note", nh.CreateNote)
+			cr.Post("/note", nth.CreateNote)
 		})
 	})
 	return cr

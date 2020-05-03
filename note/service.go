@@ -5,26 +5,26 @@ import (
 	"errors"
 )
 
-// Service : User Service
-type Service interface {
+// ServiceInterface : User Service
+type ServiceInterface interface {
 	ValidateNote(*Note) error
 	CreateNote(note *Note) error
 }
 
-// ServiceNote : Note Service Struct
-type ServiceNote struct {
+// Service : Note Service Struct
+type Service struct {
 	nr Repo
 }
 
-// NewNoteService : Returns Note Service
-func NewNoteService(db *sql.DB) Service {
-	return &ServiceNote{
+// NewService : Returns Note Service
+func NewService(db *sql.DB) ServiceInterface {
+	return &Service{
 		nr: NewRepo(db),
 	}
 }
 
 // ValidateNote : to validate Note
-func (ns *ServiceNote) ValidateNote(note *Note) error {
+func (ns *Service) ValidateNote(note *Note) error {
 	if note.Heading == "" {
 		return errors.New("heading required")
 	} else if note.Content == "" {
@@ -34,6 +34,6 @@ func (ns *ServiceNote) ValidateNote(note *Note) error {
 }
 
 // CreateNote : to create Note
-func (ns *ServiceNote) CreateNote(note *Note) error {
+func (ns *Service) CreateNote(note *Note) error {
 	return ns.nr.Create(note)
 }

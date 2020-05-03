@@ -9,25 +9,25 @@ import (
 	"strconv"
 )
 
-// Handler : Note Handler
-type Handler interface {
+// HandlerInterface : Note Handler
+type HandlerInterface interface {
 	CreateNote(w http.ResponseWriter, r *http.Request)
 }
 
-// HandleNote : Note Handler Struct
-type HandleNote struct {
-	ns Service
+// Handler : Note Handler Struct
+type Handler struct {
+	ns ServiceInterface
 }
 
 // NewHTTPHandler : Returns Note HTTP Handler
-func NewHTTPHandler(db *sql.DB) Handler {
-	return &HandleNote{
-		ns: NewNoteService(db),
+func NewHTTPHandler(db *sql.DB) HandlerInterface {
+	return &Handler{
+		ns: NewService(db),
 	}
 }
 
 // CreateNote : to Create a Note
-func (nh *HandleNote) CreateNote(w http.ResponseWriter, r *http.Request) {
+func (nh *Handler) CreateNote(w http.ResponseWriter, r *http.Request) {
 	log.Println("App : POST /user/note API hit!")
 	var note Note
 	body := json.NewDecoder(r.Body)
