@@ -12,6 +12,6 @@ func Begin() {
 		panic(err)
 	} else {
 		app := NewApp(db)
-		app.Serve(getServerAddr(), db)
+		app.Serve(getServerAddr())
 	}
 }

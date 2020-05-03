@@ -8,18 +8,37 @@ import (
 	"github.com/go-chi/cors"
 )
 
-// Router : chi Router
-func Router(db *sql.DB) *chi.Mux {
-	r := chi.NewRouter()
-	r.Use(cors.Handler(cors.Options{
+// Router : Basic Router
+type Router interface {
+	Setup() *chi.Mux
+}
+
+// ChiRouter : Struct that holds router and DB connection
+type ChiRouter struct {
+	DB *sql.DB
+}
+
+// NewRouter : Returns Basic Router
+func NewRouter(db *sql.DB) Router {
+	return &ChiRouter{
+		DB: db,
+	}
+}
+
+// Setup : chi Router
+func (r *ChiRouter) Setup() *chi.Mux {
+	cr := chi.NewRouter()
+	cr.Use(cors.Handler(cors.Options{
 		AllowedOrigins: []string{"*"},
 		AllowedMethods: []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
 		AllowedHeaders: []string{"Accept", "Authorization", "Content-Type"},
 	}))
 
-	uah := user.NewHTTPHandler(db)
+	uah := user.NewHTTPHandler(r.DB)
 
-	r.Post("/register", uah.RegisterUser)
+	cr.Route("/user", func(cr chi.Router) {
+		cr.Post("/register", uah.RegisterUser)
+	})
 
-	return r
+	return cr
 }
