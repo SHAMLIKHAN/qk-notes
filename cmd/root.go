@@ -2,8 +2,6 @@ package cmd
 
 import (
 	"log"
-	"qk-note/api"
-	"qk-note/core"
 )
 
 // Begin : Beginning of the app
@@ -12,12 +10,8 @@ func Begin() {
 	if err != nil {
 		log.Println("App : Database connection failed!")
 		panic(err)
-		// addr := getServerAddr()
-		// Router(addr, err)
 	} else {
-		app := api.App{
-			QK: core.GetCapsule(db),
-		}
-		app.Serve(getServerAddr())
+		app := NewApp(db)
+		app.Serve(getServerAddr(), db)
 	}
 }
