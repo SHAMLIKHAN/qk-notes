@@ -4,9 +4,6 @@ import (
 	"database/sql"
 	"errors"
 	"qk-note/shared"
-	"time"
-
-	"github.com/dgrijalva/jwt-go"
 )
 
 // Service : User Service
@@ -17,7 +14,6 @@ type Service interface {
 	UniqueEmail(user *User) error
 	ValidateLogin(user *Login) error
 	LoginUser(user *Login) (*Claims, error)
-	GenerateToken(user *Claims) (*JWT, error)
 }
 
 // AccountService : User Account Service Struct
@@ -96,25 +92,4 @@ func (as *AccountService) LoginUser(login *Login) (*Claims, error) {
 	userLogged.Username = user.Username
 	userLogged.Email = user.Email
 	return &userLogged, nil
-}
-
-// GenerateToken : to Generate JWT Access Token
-func (as *AccountService) GenerateToken(user *Claims) (*JWT, error) {
-	var jwtKey = []byte(shared.JWTKey)
-	expirationTime := time.Now().Add(20 * time.Minute)
-	claims := &Claims{
-		ID:       user.ID,
-		Username: user.Username,
-		Email:    user.Email,
-		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: expirationTime.Unix(),
-		},
-	}
-	token, err := jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString(jwtKey)
-	if err != nil {
-		return nil, errors.New(shared.JWTError)
-	}
-	var jwtToken JWT
-	jwtToken.Token = token
-	return &jwtToken, nil
 }

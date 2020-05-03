@@ -2,6 +2,8 @@ package router
 
 import (
 	"database/sql"
+	"fmt"
+	"net/http"
 	"qk-note/user"
 
 	"github.com/go-chi/chi"
@@ -34,12 +36,19 @@ func (r *ChiRouter) Setup() *chi.Mux {
 		AllowedHeaders: []string{"Accept", "Authorization", "Content-Type"},
 	}))
 
+	auth := user.NewAuthMiddleware()
 	uah := user.NewHTTPHandler(r.DB)
 
 	cr.Route("/user", func(cr chi.Router) {
 		cr.Post("/register", uah.RegisterUser)
 		cr.Post("/login", uah.LoginUser)
-	})
 
+		cr.Group(func(cr chi.Router) {
+			cr.Use(auth.VerifyToken)
+			cr.Get("/", func(w http.ResponseWriter, r *http.Request) {
+				fmt.Fprintf(w, "Welcome!")
+			})
+		})
+	})
 	return cr
 }

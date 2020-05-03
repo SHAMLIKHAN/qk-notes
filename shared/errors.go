@@ -11,6 +11,8 @@ const (
 	InputDataErrorCode = 4
 	// JWTErrorCode : JWTError
 	JWTErrorCode = 5
+	// InvalidAccessTokenErrorCode : InvalidAccessTokenError
+	InvalidAccessTokenErrorCode = 6
 
 	// DecodeError : Decode Error
 	DecodeError = "Error while decoding JSON data"
@@ -22,4 +24,6 @@ const (
 	InputDataError = "Error while handling input data"
 	// JWTError : JWT Error
 	JWTError = "Error while generating JWT token"
+	// InvalidAccessTokenError : Invalid Access Token Error
+	InvalidAccessTokenError = "Invalid Access Token"
 )

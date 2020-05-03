@@ -90,7 +90,8 @@ func (ah *AccountHandler) LoginUser(w http.ResponseWriter, r *http.Request) {
 		shared.Fail(w, 400, shared.DatabaseErrorCode, err.Error())
 		return
 	}
-	jwt, err := ah.as.GenerateToken(userLogged)
+	jwtAuth := NewAuthMiddleware()
+	jwt, err := jwtAuth.GenerateToken(userLogged)
 	if err != nil {
 		log.Println("App : Error! ", err.Error())
 		shared.Fail(w, 400, shared.JWTErrorCode, shared.JWTError)
