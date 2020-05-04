@@ -4,7 +4,7 @@ import "database/sql"
 
 // Repo : Note Repository
 type Repo interface {
-	Create(*Note) error
+	Create(*Note) (*Note, error)
 }
 
 // NewRepo : Returns Note Repo

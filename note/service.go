@@ -8,7 +8,7 @@ import (
 // ServiceInterface : User Service
 type ServiceInterface interface {
 	ValidateNote(*Note) error
-	CreateNote(note *Note) error
+	CreateNote(note *Note) (*Note, error)
 }
 
 // Service : Note Service Struct
@@ -34,6 +34,6 @@ func (ns *Service) ValidateNote(note *Note) error {
 }
 
 // CreateNote : to create Note
-func (ns *Service) CreateNote(note *Note) error {
+func (ns *Service) CreateNote(note *Note) (*Note, error) {
 	return ns.nr.Create(note)
 }

@@ -54,13 +54,13 @@ func (nh *Handler) CreateNote(w http.ResponseWriter, r *http.Request) {
 	note.Status = ACTIVE
 	note.Category = DEFAULT
 	note.Tags = ""
-	err = nh.ns.CreateNote(&note)
+	n, err := nh.ns.CreateNote(&note)
 	if err != nil {
 		log.Println("App : Error! ", err.Error())
 		shared.Fail(w, 500, shared.DatabaseErrorCode, shared.DatabaseError)
 		return
 	}
-	log.Println("App : Note created successfully! ", note)
-	shared.Send(w, 200, note)
+	log.Println("App : Note created successfully! ", n)
+	shared.Send(w, 200, n)
 	return
 }
