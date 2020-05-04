@@ -46,6 +46,7 @@ func (r *ChiRouter) Setup() *chi.Mux {
 		cr.Group(func(cr chi.Router) {
 			cr.Use(auth.VerifyToken)
 			cr.Post("/note", nth.CreateNote)
+			cr.Get("/note", nth.GetNotes)
 		})
 	})
 	return cr

@@ -12,6 +12,7 @@ import (
 // HandlerInterface : Note Handler
 type HandlerInterface interface {
 	CreateNote(w http.ResponseWriter, r *http.Request)
+	GetNotes(w http.ResponseWriter, r *http.Request)
 }
 
 // Handler : Note Handler Struct
@@ -62,5 +63,30 @@ func (nh *Handler) CreateNote(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Println("App : Note created successfully! ", n)
 	shared.Send(w, 200, n)
+	return
+}
+
+// GetNotes : to fetch all Notes of a User
+func (nh *Handler) GetNotes(w http.ResponseWriter, r *http.Request) {
+	log.Println("App : GET /user/note API hit!")
+	id := r.Header.Get("user_id")
+	userID, err := strconv.Atoi(id)
+	if err != nil {
+		log.Println("App : Error! ", err.Error())
+		shared.Fail(w, 400, shared.DecodeErrorCode, shared.DecodeError)
+		return
+	}
+	var note Note
+	note.UserID = userID
+	note.Status = r.URL.Query().Get("status")
+	note.Category = r.URL.Query().Get("category")
+	notes, err := nh.ns.GetNotes(&note)
+	if err != nil {
+		log.Println("App : Error! ", err.Error())
+		shared.Fail(w, 400, shared.DatabaseErrorCode, shared.DatabaseError)
+		return
+	}
+	log.Println("App : Notes fetched successfully for user : ", userID)
+	shared.Send(w, 200, notes)
 	return
 }

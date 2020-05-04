@@ -17,3 +17,22 @@ func (pg *PostgresRepo) Create(note *Note) (*Note, error) {
 	err := row.Scan(&n.ID, &n.UserID, &n.Heading, &n.Content, &n.Status, &n.Category, &n.Tags)
 	return &n, err
 }
+
+// GetAll : Postgres function to fetch all Notes
+func (pg *PostgresRepo) GetAll(note *Note) ([]Note, error) {
+	query := `SELECT * FROM note WHERE user_id = $1;`
+	rows, err := pg.DB.Query(query, note.UserID)
+	if err != nil {
+		return nil, err
+	}
+	var notes []Note
+	for rows.Next() {
+		var note Note
+		err := rows.Scan(&note.ID, &note.UserID, &note.Heading, &note.Content, &note.Status, &note.Category, &note.Tags)
+		if err != nil {
+			return nil, err
+		}
+		notes = append(notes, note)
+	}
+	return notes, nil
+}
